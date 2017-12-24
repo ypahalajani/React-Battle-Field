@@ -1,4 +1,5 @@
 var React = require('react');
+var api = require('../utils/api');
 
 function SelectedComponent(props) {
 	var languages = ['All', 'Javascript', 'Ruby', 'Java', 'CSS', 'Python'];
@@ -25,23 +26,40 @@ class Popular extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-			selectedLanguage: 'All'
+			selectedLanguage: 'All',
+			repos: null
 		}
-		this.onLanguageSelected = this.onLanguageSelected.bind(this);
+		this.updateLanguage = this.updateLanguage.bind(this);
 	}
-	onLanguageSelected(lang) {
+
+	componentDidMount() {
+		this.updateLanguage(this.state.selectedLanguage);
+	}
+
+	updateLanguage(lang) {
 		this.setState(function () {
 			return {
-				selectedLanguage: lang
+				selectedLanguage: lang,
+				repos: null
 			}
 		})
+
+		api.fetchPopularRepos(lang)
+			.then(function (repos) {
+				this.setState(function () {
+					return {
+						repos: repos
+					}
+				})
+			}.bind(this));
 	}
+
 	render() {
 		return (
 			<div>
 				<SelectedComponent 
 					selectedLanguage={this.state.selectedLanguage}
-					onSelected={this.onLanguageSelected}>
+					onSelected={this.updateLanguage}>
 				</SelectedComponent>
 			</div>
 		);
