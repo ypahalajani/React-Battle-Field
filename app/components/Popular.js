@@ -1,5 +1,26 @@
 var React = require('react');
 
+function SelectedComponent(props) {
+	var languages = ['All', 'Javascript', 'Ruby', 'Java', 'CSS', 'Python'];
+	return (
+		<ul className="languages">
+			{
+				languages.map(function (lang, index){
+					return (
+						<li
+							style={props.selectedLanguage === lang ? {
+								color: '#d0021b' }: null}
+							onClick={props.onSelected.bind(null, lang)} 
+							key={index}>
+							{lang}
+						</li>
+					)
+				}, this)
+			}
+		</ul>
+	)
+}
+
 class Popular extends React.Component {
 	constructor() {
 		super();
@@ -16,23 +37,13 @@ class Popular extends React.Component {
 		})
 	}
 	render() {
-		var languages = ['All', 'Javascript', 'Ruby', 'Java', 'CSS', 'Python'];
 		return (
-			<ul className="languages">
-				{
-					languages.map(function (lang, index){
-						return (
-							<li
-								style={this.state.selectedLanguage === lang ? {
-									color: '#d0021b' }: null}
-								onClick={this.onLanguageSelected.bind(null, lang)} 
-								key={index}>
-								{lang}
-							</li>
-						)
-					}, this)
-				}
-			</ul>
+			<div>
+				<SelectedComponent 
+					selectedLanguage={this.state.selectedLanguage}
+					onSelected={this.onLanguageSelected}>
+				</SelectedComponent>
+			</div>
 		);
 	}
 }
